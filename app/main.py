@@ -5,6 +5,7 @@ from typing import Optional, List, Dict, Any
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Path, Query
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from pymongo import MongoClient, ASCENDING, DESCENDING
 from pymongo.errors import DuplicateKeyError
@@ -29,6 +30,10 @@ def startup_event():
     db.attendance_logs.create_index([("date", DESCENDING), ("emp_code", ASCENDING)])
     db.attendance_logs.create_index([("emp_code", ASCENDING), ("punch_in", ASCENDING)])
     db.attendance_logs.create_index("date")
+
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse(url="/docs")
 
 # --------------------------------------------------------------------------- #
 # Helpers
